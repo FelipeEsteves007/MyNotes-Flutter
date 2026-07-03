@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "636965214764",
+    "project_id": "mynotes-felipe-app",
+    "storage_bucket": "mynotes-felipe-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636965214764:android:9f9d7d7ccfb20df9140f89",
+        "android_client_info": {
+          "package_name": "com.mynotes.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1OupKL0r2tf3EnWosRSli6Gg3Fsv5DpE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
