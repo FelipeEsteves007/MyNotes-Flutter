@@ -1,30 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mynotes/view/login_view.dart';
-import 'firebase_options.dart';
+import 'package:mynotes/firebase_options.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    MaterialApp(
-      title: 'MyApp',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-      home: const LoginView(),
-    ),
-  );
-}
-
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
+class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -46,8 +32,10 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(style: TextStyle(color: Colors.white), 'Register'),
-        backgroundColor: Colors.black,
+        title: const Text(style: TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold), 
+          'Login'),
+        backgroundColor: Colors.blueGrey,
       ),
       body: FutureBuilder(
         future: Firebase.initializeApp(
@@ -77,17 +65,20 @@ class _RegisterViewState extends State<RegisterView> {
               controller: _password
             ),
             TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+              ),
               onPressed: () async{
                 final email = _email.text;
                 final password = _password.text;
-                final userCredencial = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                final userLogin = await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: email, password: password);
-                  print(userCredencial);
+                  print(userLogin);
               }, 
               child: const Text(
                 style: TextStyle(
-                  color: Colors.black), 
-                  'Register')
+                  color: Colors.white, fontWeight: FontWeight.bold), 
+                  'Login')
               ),
           ],
         );
@@ -98,4 +89,6 @@ class _RegisterViewState extends State<RegisterView> {
       ),
     );
   }
+
+  
 }
