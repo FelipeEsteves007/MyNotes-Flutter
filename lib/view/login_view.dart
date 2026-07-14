@@ -69,11 +69,18 @@ class _LoginViewState extends State<LoginView> {
                 backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
               ),
               onPressed: () async{
-                final email = _email.text;
-                final password = _password.text;
-                final userLogin = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                final email = _email.text.trim();
+                final password = _password.text.trim();
+                try {
+                  final userLogin = await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: email, password: password);
                   print(userLogin);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'invalid-credential') {
+                    print('Invalid credentials error');
+                  };
+                  //print(e.runtimeType);
+                }
               }, 
               child: const Text(
                 style: TextStyle(

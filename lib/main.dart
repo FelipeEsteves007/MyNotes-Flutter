@@ -77,16 +77,30 @@ class _RegisterViewState extends State<RegisterView> {
               controller: _password
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.black,
+              ),
               onPressed: () async{
-                final email = _email.text;
-                final password = _password.text;
-                final userCredencial = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                final email = _email.text.trim();
+                final password = _password.text.trim();
+                try {
+                  final userCredencial = await FirebaseAuth.instance.createUserWithEmailAndPassword(
                   email: email, password: password);
                   print(userCredencial);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'weak-password') {
+                    print('Weak password');
+                  } else if (e.code == 'email-already-in-use') {
+                    print('Email already in use');
+                  } else if (e.code == 'invalid-email') {
+                    print('Invalid email');
+                  }
+                  //print('Error: ${e.code}');
+                }
               }, 
               child: const Text(
                 style: TextStyle(
-                  color: Colors.black), 
+                  color: Colors.white, fontWeight: FontWeight.bold), 
                   'Register')
               ),
           ],
