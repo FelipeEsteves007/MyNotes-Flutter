@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mynotes/firebase_options.dart';
 import 'package:mynotes/view/login_view.dart';
-import 'firebase_options.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,100 +12,44 @@ void main() {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const LoginView(),
+      home: const HomePage(),
     ),
   );
 }
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-
-@override
-  initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-    super.initState();
-  }
-
-@override
-  dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
-
-@override
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(style: TextStyle(color: Colors.white), 'Register'),
-        backgroundColor: Colors.black,
+        title: Text( 
+          style: TextStyle(
+            color: Colors.white),
+          'Home'),
+        backgroundColor: Colors.blue,
       ),
       body: FutureBuilder(
         future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         ),
         builder: (context, snapshot) {
-          switch (snapshot.connectionState){
+          switch (snapshot.connectionState) {
             case ConnectionState.done:
-               return Column(
-          children: [
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Enter your email here'
-              ),
-              controller: _email
-            ),
-            TextField(
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Enter your password here',
-              ),
-              controller: _password
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.black,
-              ),
-              onPressed: () async{
-                final email = _email.text.trim();
-                final password = _password.text.trim();
-                try {
-                  final userCredencial = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email, password: password);
-                  print(userCredencial);
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'weak-password') {
-                    print('Weak password');
-                  } else if (e.code == 'email-already-in-use') {
-                    print('Email already in use');
-                  } else if (e.code == 'invalid-email') {
-                    print('Invalid email');
-                  }
-                  //print('Error: ${e.code}');
-                }
-              }, 
-              child: const Text(
-                style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold), 
-                  'Register')
-              ),
-          ],
-        );
-        default:
+            final user = FirebaseAuth.instance.currentUser;
+              if (user?.emailVerified ?? false) {
+                print('Your email is verified');
+              } else {
+                print('Your email is not verified');
+              }
+              return const Text('Done');
+            default:
               return const Text('Loading...');
           }
         },
