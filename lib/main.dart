@@ -9,9 +9,7 @@ void main() {
   runApp(
     MaterialApp(
       title: 'MyApp',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
+      theme: ThemeData(useMaterial3: true),
       home: const HomePage(),
     ),
   );
@@ -29,10 +27,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text( 
-          style: TextStyle(
-            color: Colors.white),
-          'Home'),
+        title: Text(style: TextStyle(color: Colors.white), 'Home'),
         backgroundColor: Colors.blue,
       ),
       body: FutureBuilder(
@@ -42,18 +37,52 @@ class _HomePageState extends State<HomePage> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
+              /*final user = FirebaseAuth.instance.currentUser;
               if (user?.emailVerified ?? false) {
-                print('Your email is verified');
+                return const Text('Done');
               } else {
-                print('Your email is not verified');
-              }
-              return const Text('Done');
+                return const VerifyEmail();
+              }  */
+              return LoginView();        
             default:
               return const Text('Loading...');
-          }
+           }    
         },
       ),
     );
+  }
+}
+
+class VerifyEmail extends StatefulWidget {
+  const VerifyEmail({super.key});
+
+  @override
+  State<VerifyEmail> createState() => _VerifyEmailState();
+}
+
+class _VerifyEmailState extends State<VerifyEmail> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+          children: [
+            const Text(
+              'Please verify your email address:',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+              },
+              child: const Text('Send email verification'),
+            )
+          ],
+        ),
+      );
   }
 }
