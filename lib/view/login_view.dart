@@ -28,50 +28,66 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          keyboardType: TextInputType.emailAddress,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration(hintText: 'Enter your email here'),
-          controller: _email,
-        ),
-        TextField(
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration(
-            hintText: 'Enter your password here',
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text( style: TextStyle(color: Colors.white), 'Login'),
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          TextField(
+            keyboardType: TextInputType.emailAddress,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration(hintText: 'Enter your email here'),
+            controller: _email,
           ),
-          controller: _password,
-        ),
-        TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
+          TextField(
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              hintText: 'Enter your password here',
+            ),
+            controller: _password,
           ),
-          onPressed: () async {
-            final email = _email.text.trim();
-            final password = _password.text.trim();
-            try {
-              final userLogin = await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
-              print(userLogin);
-            } on FirebaseAuthException catch (e) {
-              if (e.code == 'invalid-credential') {
-                print('Invalid credentials error');
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () async {
+              final email = _email.text.trim();
+              final password = _password.text.trim();
+              try {
+                final userLogin = await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(email: email, password: password);
+                print(userLogin);
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'invalid-credential') {
+                  print('Invalid credentials error');
+                }
+                ;
+                //print(e.runtimeType);
               }
-              ;
-              //print(e.runtimeType);
-            }
-          },
-          child: const Text(
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            'Login',
+            },
+            child: const Text(
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              'Login',
+            ),
           ),
-        ),
-      ],
+          TextButton(
+            onPressed:() {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/register/0', 
+                (route) => false);
+            },
+            child: const Text( style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              'Not registered yet? Register here!',
+            ),
+          )
+        ],
+      ),
     );
   }
 }

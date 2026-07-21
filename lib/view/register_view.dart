@@ -30,54 +30,72 @@ class _RegisterViewState extends State<RegisterView> {
 
 @override
   Widget build(BuildContext context) {
-    return Column(
-          children: [
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Enter your email here'
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text( style: TextStyle(color: Colors.white), 'Register'),
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+            children: [
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your email here'
+                ),
+                controller: _email
               ),
-              controller: _email
-            ),
-            TextField(
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                hintText: 'Enter your password here',
+              TextField(
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your password here',
+                ),
+                controller: _password
               ),
-              controller: _password
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.black,
-              ),
-              onPressed: () async{
-                final email = _email.text.trim();
-                final password = _password.text.trim();
-                try {
-                  final userCredencial = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email, password: password);
-                  print(userCredencial);
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'weak-password') {
-                    print('Weak password');
-                  } else if (e.code == 'email-already-in-use') {
-                    print('Email already in use');
-                  } else if (e.code == 'invalid-email') {
-                    print('Invalid email');
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.black,
+                ),
+                onPressed: () async{
+                  final email = _email.text.trim();
+                  final password = _password.text.trim();
+                  try {
+                    final userCredencial = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: email, password: password);
+                    print(userCredencial);
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'weak-password') {
+                      print('Weak password');
+                    } else if (e.code == 'email-already-in-use') {
+                      print('Email already in use');
+                    } else if (e.code == 'invalid-email') {
+                      print('Invalid email');
+                    }
+                    //print('Error: ${e.code}');
                   }
-                  //print('Error: ${e.code}');
-                }
-              }, 
-              child: const Text(
-                style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold), 
-                  'Register')
-              ),
-          ],
-        );
+                }, 
+                child: const Text(
+                  style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold), 
+                    'Register')
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/login/0', 
+                      (route) => false);
+                  },
+                  child: const Text(
+                    style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                      'Already registered? Login here!'
+                    )
+                ),
+            ],
+          ),
+    );
   }
 }
