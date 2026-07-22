@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -42,18 +41,37 @@ class _HomePageState extends State<HomePage> {
               final user = FirebaseAuth.instance.currentUser;
               if (user != null){
                 if (user.emailVerified){
-                  print('verified email');
+                   return const NotesView();  
                 } else {
-                  return const VerifyEmail();
+                  return const VerifyEmail  ();
                 }
               } else {
                 return const LoginView();
-              }
-              return const Text('done');     
+              }   
             default:
               return const CircularProgressIndicator();
            }    
         },
       );
+  }
+}
+
+
+class NotesView extends StatefulWidget {
+  const NotesView({super.key});
+
+  @override
+  State<NotesView> createState() => _NotesViewState();
+}
+
+class _NotesViewState extends State<NotesView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text( style: TextStyle(color: Colors.white), 'Notes'),
+        backgroundColor: Colors.black,
+      ),
+    );
   }
 }
