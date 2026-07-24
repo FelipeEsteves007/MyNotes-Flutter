@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -31,7 +30,7 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(style: TextStyle(color: Colors.white), 'Login'),
+        title: const Text( style: TextStyle(color: Colors.white), 'Login'),
         backgroundColor: Colors.black,
       ),
       body: Column(
@@ -40,9 +39,7 @@ class _LoginViewState extends State<LoginView> {
             keyboardType: TextInputType.emailAddress,
             enableSuggestions: false,
             autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: 'Enter your email here',
-            ),
+            decoration: const InputDecoration(hintText: 'Enter your email here'),
             controller: _email,
           ),
           TextField(
@@ -63,41 +60,32 @@ class _LoginViewState extends State<LoginView> {
               final email = _email.text.trim();
               final password = _password.text.trim();
               try {
-                await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                      email: email,
-                      password: password,
-                    );
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/notes/', (route) => false,);
+                final userLogin = await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(email: email, password: password);
+                print(userLogin);
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'invalid-credential') {
-                  devtools.log('Invalid credentials error');
+                  print('Invalid credentials error');
                 }
+                ;
+                //print(e.runtimeType);
               }
             },
             child: const Text(
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               'Login',
             ),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).pushNamedAndRemoveUntil('/register/', (route) => false);
+            onPressed:() {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/register/0', 
+                (route) => false);
             },
-            child: const Text(
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
+            child: const Text( style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               'Not registered yet? Register here!',
             ),
-          ),
+          )
         ],
       ),
     );
