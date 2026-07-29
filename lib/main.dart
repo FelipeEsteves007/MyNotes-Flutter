@@ -1,11 +1,11 @@
-  import 'package:firebase_auth/firebase_auth.dart';
-  import 'package:firebase_core/firebase_core.dart';
-  import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
-  import 'package:mynotes/firebase_options.dart';
-  import 'package:mynotes/view/login_view.dart';
-  import 'package:mynotes/view/register_view.dart';
-  import 'package:mynotes/view/verify_viewEmail.dart';
+import 'package:mynotes/firebase_options.dart';
+import 'package:mynotes/view/login_view.dart';
+import 'package:mynotes/view/register_view.dart';
+import 'package:mynotes/view/verify_viewEmail.dart';
 
   void main() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -107,9 +107,6 @@ import 'package:mynotes/constants/routes.dart';
     }
   }
 
-  class FirabaseAuth {
-  }
-
   Future<bool> showLogDialog(BuildContext context){
     return showDialog<bool>(
       context: context,
@@ -129,3 +126,4 @@ import 'package:mynotes/constants/routes.dart';
       }
     ).then((value) => value ?? false);
   }
+
