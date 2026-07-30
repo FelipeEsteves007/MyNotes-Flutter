@@ -18,6 +18,7 @@ import 'package:mynotes/view/verify_viewEmail.dart';
           loginRoute : (context) => const LoginView(),
           registerRoute : (context) => const RegisterView(),
           notesRoute: (context) => const NotesView(),
+          emailRoute:(context) => const VerifyEmail(),
         }
       ),
     );
