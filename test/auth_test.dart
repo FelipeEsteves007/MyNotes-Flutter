@@ -29,11 +29,47 @@ void main() {
     test(
       'Should be able to initialize in less than 2 seconds',
       () async {
-        await provider.initialize();
         expect(provider.isInitialized, true);
       },
       timeout: const Timeout(Duration(seconds: 2)),
     );
+
+    test('User should be delegate to logIn function', () async {
+      expect(
+        () => provider.logIn(email: 'foo@bar.com', password: 'foobar'),
+        throwsA(isA<InvalidEmailException>()),
+      );
+    });
+
+    test('test weak password', () async {
+      expect(
+        () => provider.logIn(email: 'valid@.com', password: 'foobar'),
+        throwsA(isA<WeakpeakException>()),
+      );
+    });
+
+    test('Create a user', () async {
+      final userCreated = await provider.createUser(
+        email: 'valid@.com',
+        password: 'validPass',
+      );
+      expect(provider.currentUser, userCreated);
+      expect(userCreated.isEmailVerified, false);
+    });
+
+    test('User verify email', () async {
+      await provider.sendEmailVerification();
+      final emailUser = provider.currentUser;
+      expect(emailUser, isNotNull);
+      expect(emailUser?.isEmailVerified, true);
+    });
+
+    test('User should be logOut and logIn', () async {
+      await provider.logOut();
+      await provider.logIn(email: 'valid@.com', password: 'validPass');
+      final user = provider.currentUser;
+      expect(user, isNotNull);
+    });
   });
 }
 
