@@ -1,32 +1,38 @@
 import 'package:flutter/foundation.dart';
+import 'package:mynotes/services/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart'
     show MissingPlatformDirectoryException, getApplicationDocumentsDirectory;
 
-class DatabaseAlreadyOpenException implements Exception {}
-
-class DatabaseIsNotOpenException implements Exception {}
-
-class UnableToGetDocuments implements Exception {}
-
-class CouldNotDeleteuser implements Exception {}
-
-class UserAlreadyExists implements Exception {}
-
-class CouldNotFindUser implements Exception {}
-
-class CouldNotDeleteNote implements Exception {}
-
-class CouldNotFindNote implements Exception {}
-
 class NotesServices {
   Database? _db;
+
+  Future<DatabaseNotes> updateNote({
+    required DatabaseNotes note,
+    required String text,
+  }) async {
+    final db = _getDatabaseOrThrow();
+    await getNote(id: note.id);
+
+    final noteCount = await db.update(
+      noteTable,
+      {textColumn: text, isSyncedColumn: 0},
+      where: 'id = ?',
+      whereArgs: [note.id],
+    );
+
+    if (noteCount == 0) {
+      throw CouldNotUpdateNote();
+    } else {
+      return await getNote(id: note.id);
+    }
+  }
 
   Future<Iterable<DatabaseNotes>> getAllNotes() async {
     final db = _getDatabaseOrThrow();
     final notes = await db.query(noteTable);
-    return notes.map((noteRow) => DatabaseNotes.fromRow(notes.first));
+    return notes.map((noteRow) => DatabaseNotes.fromRow(noteRow));
   }
 
   Future<DatabaseNotes> getNote({required int id}) async {
@@ -34,7 +40,7 @@ class NotesServices {
     final note = await db.query(
       noteTable,
       where: 'id = ?',
-      whereArgs: [idColumn]
+      whereArgs: [id],
     );
 
     if (note.isEmpty) {
@@ -54,7 +60,7 @@ class NotesServices {
     final deletedCount = await db.delete(
       noteTable,
       where: 'id = ?',
-      whereArgs: [idColumn],
+      whereArgs: [id],
     );
     if (deletedCount == 0) {
       throw CouldNotDeleteNote();
